@@ -28,10 +28,16 @@ export class TasksService {
     return task;
   }
 
-  DeleteTaskById(id: string): void {
+  deleteTaskById(id: string): void {
     const index = this.tasks.findIndex((task) => task.id === id);
     if (index != -1) {
       this.tasks.splice(index, 1);
     }
+  }
+
+  updateTaskStatus(id: string, status: TaskStatus): Task {
+    const task = this.getTaskById(id);
+    task.status = status;
+    return task;
   }
 }
