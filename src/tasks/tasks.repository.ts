@@ -5,7 +5,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatus } from './task-status.enum';
 import { Task } from './task.entity';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 
 @Injectable()
 export class TaskRepository {
@@ -15,7 +15,9 @@ export class TaskRepository {
   ) {}
 
   async findById(id: string, user: User): Promise<Task> {
-    const found = await this.taskEntityRepository.findOneBy({ id, user });
+    const found = await this.taskEntityRepository.findOne({
+      where: { id, user },
+    });
     if (!found) {
       throw new NotFoundException(`Task with ID "${id}" not found`);
     }
@@ -35,7 +37,7 @@ export class TaskRepository {
     return task;
   }
 
-  async findAll(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
     const { status, search } = filterDto;
     const query = this.taskEntityRepository.createQueryBuilder('task');
 
